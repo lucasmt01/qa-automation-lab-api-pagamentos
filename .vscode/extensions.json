@@ -1,0 +1,8 @@
+﻿{
+  "recommendations": [
+    "ms-playwright.playwright",
+    "ms-azuretools.vscode-docker",
+    "mongodb.mongodb-vscode",
+    "esbenp.prettier-vscode"
+  ]
+}

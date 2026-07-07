@@ -1,0 +1,15 @@
+﻿name: API Tests
+
+on:
+  workflow_dispatch:
+
+jobs:
+  api-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Placeholder
+        run: echo "Pipeline serÃ¡ finalizado apÃ³s implementaÃ§Ã£o da API e testes."

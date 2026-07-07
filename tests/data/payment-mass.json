@@ -1,0 +1,14 @@
+﻿{
+  "validPixPayment": {
+    "amount": 150.75,
+    "currency": "BRL",
+    "paymentMethod": "PIX",
+    "customerDocument": "12345678909",
+    "description": "Pagamento PIX criado pela automaÃ§Ã£o"
+  },
+  "invalidPaymentWithoutAmount": {
+    "currency": "BRL",
+    "paymentMethod": "PIX",
+    "customerDocument": "12345678909"
+  }
+}

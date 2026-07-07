@@ -1,0 +1,42 @@
+{
+  "name": "qa-automation-lab-api-pagamentos",
+  "version": "1.0.0",
+  "description": "Projeto de portfÃ³lio de automaÃ§Ã£o de testes para uma API simulada de pagamentos.",
+  "private": true,
+  "scripts": {
+    "mongo:up": "docker compose up -d",
+    "mongo:down": "docker compose down",
+    "api:dev": "npm --prefix fake-api run dev",
+    "api:build": "npm --prefix fake-api run build",
+    "api:start": "npm --prefix fake-api run start",
+    "test": "playwright test",
+    "test:api": "playwright test tests/api",
+    "test:db": "playwright test tests/database",
+    "test:report": "playwright show-report reports/playwright-report",
+    "postman:test": "newman run postman/payments.postman_collection.json -e postman/local.postman_environment.json",
+    "install:api": "npm --prefix fake-api install",
+    "install:all": "npm install && npm --prefix fake-api install"
+  },
+  "keywords": [
+    "qa",
+    "qa-automation",
+    "api-testing",
+    "playwright",
+    "typescript",
+    "postman",
+    "newman",
+    "mongodb",
+    "payments"
+  ],
+  "author": "Lucas Eduardo Mota",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "ajv": "^8.20.0",
+    "dotenv": "^17.4.2",
+    "mongodb": "^7.5.0",
+    "newman": "^6.2.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.3"
+  }
+}

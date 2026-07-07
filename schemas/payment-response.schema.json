@@ -1,0 +1,35 @@
+﻿{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PaymentResponse",
+  "type": "object",
+  "required": [
+    "id",
+    "amount",
+    "currency",
+    "paymentMethod",
+    "customerDocument",
+    "status",
+    "testRunId",
+    "createdAt",
+    "updatedAt"
+  ],
+  "properties": {
+    "id": { "type": "string" },
+    "amount": { "type": "number" },
+    "currency": { "type": "string" },
+    "paymentMethod": {
+      "type": "string",
+      "enum": ["PIX", "BOLETO", "CREDIT_CARD"]
+    },
+    "customerDocument": { "type": "string" },
+    "description": { "type": "string" },
+    "status": {
+      "type": "string",
+      "enum": ["PENDING", "APPROVED", "REFUSED", "CANCELLED"]
+    },
+    "testRunId": { "type": "string" },
+    "createdAt": { "type": "string" },
+    "updatedAt": { "type": "string" }
+  },
+  "additionalProperties": false
+}
