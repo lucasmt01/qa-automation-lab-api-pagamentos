@@ -1,6 +1,6 @@
-﻿import { testRunId } from '../helpers/test-run';
+﻿import { generateTestRunId } from '../helpers/test-run';
 
-export function validPixPaymentPayload() {
+export function validPixPaymentPayload(testRunId = generateTestRunId()) {
   return {
     amount: 150.75,
     currency: 'BRL',

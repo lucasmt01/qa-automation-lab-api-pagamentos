@@ -3,7 +3,8 @@ import { Payment } from '../models/payment.model';
 import { CreatePaymentInput } from '../validators/payment.validator';
 import {
   createPayment as createPaymentRepository,
-  findPaymentById
+  findPaymentById,
+  deletePaymentsByTestRunId as deletePaymentsByTestRunIdRepository
 } from '../repositories/payments.repository';
 
 export async function createPayment(input: CreatePaymentInput): Promise<Payment> {
@@ -27,4 +28,13 @@ export async function createPayment(input: CreatePaymentInput): Promise<Payment>
 
 export async function getPaymentById(id: string): Promise<Payment | null> {
   return findPaymentById(id);
+}
+
+export async function cleanupPaymentsByTestRunId(testRunId: string) {
+  const deletedCount = await deletePaymentsByTestRunIdRepository(testRunId);
+
+  return {
+    testRunId,
+    deletedCount
+  };
 }

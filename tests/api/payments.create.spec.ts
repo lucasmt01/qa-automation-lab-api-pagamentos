@@ -1,14 +1,27 @@
 import { test, expect } from '@playwright/test';
 import { authHeaders } from '../helpers/auth';
 import { validPixPaymentPayload } from '../fixtures/payment.fixture';
+import { generateTestRunId } from '../helpers/test-run';
+import { cleanupPaymentsByTestRunId } from '../helpers/cleanup';
 import {
   expectPaymentCreatedResponse,
   expectErrorResponse
 } from '../helpers/payment-assertions';
 
+let testRunIdsToCleanup: string[] = [];
+
+test.afterEach(async ({ request }) => {
+  for (const testRunId of testRunIdsToCleanup) {
+    await cleanupPaymentsByTestRunId(request, testRunId);
+  }
+
+  testRunIdsToCleanup = [];
+});
+
 test('POST /payments deve criar pagamento PIX com sucesso', async ({ request }) => {
   // Arrange
   const payload = validPixPaymentPayload();
+  testRunIdsToCleanup.push(payload.testRunId);
 
   // Act
   const response = await request.post('/payments', {
@@ -26,6 +39,7 @@ test('POST /payments deve criar pagamento PIX com sucesso', async ({ request }) 
 test('POST /payments deve retornar 401 quando não informar autenticação', async ({ request }) => {
   // Arrange
   const payload = validPixPaymentPayload();
+  testRunIdsToCleanup.push(payload.testRunId);
 
   // Act
   const response = await request.post('/payments', {
@@ -47,8 +61,11 @@ test('POST /payments deve retornar 400 quando payload for inválido', async ({ r
   // Arrange
   const invalidPayload = {
     currency: 'BRL',
-    paymentMethod: 'PIX'
+    paymentMethod: 'PIX',
+    testRunId: generateTestRunId('invalid_payload')
   };
+
+  testRunIdsToCleanup.push(invalidPayload.testRunId);
 
   // Act
   const response = await request.post('/payments', {

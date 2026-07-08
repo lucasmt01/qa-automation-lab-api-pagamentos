@@ -42,3 +42,13 @@ export function expectErrorResponse(body: any, code: string, message: string) {
   expect(body.code).toBe(code);
   expect(body.message).toBe(message);
 }
+
+export function expectCleanupResponse(
+  body: any,
+  testRunId: string,
+  minimumDeletedCount = 0
+) {
+  expect(body.message).toBe('Massa de teste expurgada com sucesso');
+  expect(body.testRunId).toBe(testRunId);
+  expect(body.deletedCount).toBeGreaterThanOrEqual(minimumDeletedCount);
+}

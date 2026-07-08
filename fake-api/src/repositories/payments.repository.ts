@@ -31,3 +31,13 @@ export async function findPaymentById(id: string): Promise<Payment | null> {
 
   return payment;
 }
+
+export async function deletePaymentsByTestRunId(testRunId: string): Promise<number> {
+  const collection = await getPaymentsCollection();
+
+  const result = await collection.deleteMany({
+    testRunId
+  });
+
+  return result.deletedCount;
+}

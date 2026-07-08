@@ -1,11 +1,9 @@
 ﻿import { Router } from 'express';
+import { authMiddleware } from '../middlewares/auth.middleware';
+import { deletePaymentsByTestRunIdController } from '../controllers/test-data.controller';
 
 const router = Router();
 
-router.delete('/payments', (_req, res) => {
-  return res.status(501).json({
-    message: 'DELETE /test-data/payments ainda será implementado'
-  });
-});
+router.delete('/payments', authMiddleware, deletePaymentsByTestRunIdController);
 
 export default router;
