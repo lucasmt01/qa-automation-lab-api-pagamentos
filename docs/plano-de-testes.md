@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-Validar uma API simulada de pagamentos com foco em testes de API, regras de negÃ³cio, contrato JSON, massa de dados, expurgo e execuÃ§Ã£o em pipeline.
+Validar uma API simulada de pagamentos com foco em testes de API, regras de negócio, contrato JSON, massa de dados, expurgo e execução em pipeline.
 
 ## Escopo inicial
 
@@ -10,18 +10,18 @@ Validar uma API simulada de pagamentos com foco em testes de API, regras de neg�
 - Consultar pagamento
 - Atualizar status
 - Cancelar pagamento
-- Validar autenticaÃ§Ã£o
-- Validar payloads invÃ¡lidos
+- Validar autenticação
+- Validar payloads inválidos
 - Validar contrato JSON
 - Expurgar massa de teste por testRunId
 
 ## Fora de escopo inicial
 
-- IntegraÃ§Ã£o com banco real de produÃ§Ã£o
-- Processamento assÃ­ncrono real
-- IntegraÃ§Ã£o com serviÃ§os externos reais
+- Integração com banco real de produção
+- Processamento assíncrono real
+- Integração com serviços externos reais
 - Testes de interface
 
-## EstratÃ©gia
+## Estratégia
 
-A suÃ­te principal validarÃ¡ o comportamento pela API REST. O MongoDB serÃ¡ usado como persistÃªncia da API, apoio ao expurgo e, pontualmente, para auditoria tÃ©cnica de dados.
+A suíte principal validará o comportamento pela API REST. O MongoDB será usado como persistência da API, apoio ao expurgo e, pontualmente, para auditoria técnica de dados.

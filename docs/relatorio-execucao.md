@@ -1,13 +1,13 @@
-﻿# RelatÃ³rio de ExecuÃ§Ã£o
+﻿# Relatório de Execução
 
-## ExecuÃ§Ã£o local
-
-Pendente.
-
-## ExecuÃ§Ã£o em pipeline
+## Execução local
 
 Pendente.
 
-## ObservaÃ§Ãµes
+## Execução em pipeline
+
+Pendente.
+
+## Observações
 
 Pendente.

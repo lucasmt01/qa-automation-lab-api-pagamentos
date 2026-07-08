@@ -1,10 +1,10 @@
-﻿# EstratÃ©gia de Massa de Dados
+﻿# Estratégia de Massa de Dados
 
-A massa criada pela automaÃ§Ã£o serÃ¡ identificada por um campo `testRunId`.
+A massa criada pela automação será identificada por um campo `testRunId`.
 
-Esse identificador permitirÃ¡:
+Esse identificador permitirá:
 
-- rastrear dados criados por execuÃ§Ã£o;
-- evitar conflito entre execuÃ§Ãµes;
-- expurgar somente dados da automaÃ§Ã£o;
+- rastrear dados criados por execução;
+- evitar conflito entre execuções;
+- expurgar somente dados da automação;
 - manter os testes independentes.

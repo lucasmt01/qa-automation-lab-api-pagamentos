@@ -6,7 +6,7 @@ export function validPixPaymentPayload() {
     currency: 'BRL',
     paymentMethod: 'PIX',
     customerDocument: '12345678909',
-    description: 'Pagamento PIX criado pela automaÃ§Ã£o',
+    description: 'Pagamento PIX criado pela automação',
     testRunId
   };
 }

@@ -1,7 +1,7 @@
 {
   "name": "qa-automation-lab-api-pagamentos",
   "version": "1.0.0",
-  "description": "Projeto de portfÃ³lio de automaÃ§Ã£o de testes para uma API simulada de pagamentos.",
+  "description": "Projeto de portfólio de automação de testes para uma API simulada de pagamentos.",
   "private": true,
   "scripts": {
     "mongo:up": "docker compose up -d",

@@ -1,10 +1,10 @@
-﻿# EvidÃªncias
+﻿# Evidências
 
-As evidÃªncias serÃ£o compostas por:
+As evidências serão compostas por:
 
-- relatÃ³rio HTML do Playwright;
-- relatÃ³rio JUnit;
-- saÃ­da da execuÃ§Ã£o no terminal;
+- relatório HTML do Playwright;
+- relatório JUnit;
+- saída da execução no terminal;
 - collection Postman;
 - resultado Newman;
 - prints opcionais do GitHub Actions.

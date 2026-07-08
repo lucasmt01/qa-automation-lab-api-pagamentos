@@ -1,1 +1,1 @@
-﻿// Helper de expurgo serÃ¡ implementado quando o endpoint DELETE /test-data/payments estiver pronto.
+﻿// Helper de expurgo será implementado quando o endpoint DELETE /test-data/payments estiver pronto.

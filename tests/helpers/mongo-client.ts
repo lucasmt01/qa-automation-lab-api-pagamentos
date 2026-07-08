@@ -1,1 +1,1 @@
-﻿// Helper de consulta direta no Mongo serÃ¡ usado apenas em testes especÃ­ficos de auditoria tÃ©cnica.
+﻿// Helper de consulta direta no Mongo será usado apenas em testes específicos de auditoria técnica.

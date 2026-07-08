@@ -1,28 +1,25 @@
 ﻿import { Router } from 'express';
+import { authMiddleware } from '../middlewares/auth.middleware';
+import {
+  createPaymentController,
+  getPaymentByIdController
+} from '../controllers/payments.controller';
 
 const router = Router();
 
-router.post('/', (_req, res) => {
+router.post('/', authMiddleware, createPaymentController);
+
+router.get('/:id', authMiddleware, getPaymentByIdController);
+
+router.patch('/:id/status', authMiddleware, (_req, res) => {
   return res.status(501).json({
-    message: 'POST /payments ainda serÃ¡ implementado'
+    message: 'PATCH /payments/:id/status ainda será implementado'
   });
 });
 
-router.get('/:id', (_req, res) => {
+router.post('/:id/cancel', authMiddleware, (_req, res) => {
   return res.status(501).json({
-    message: 'GET /payments/:id ainda serÃ¡ implementado'
-  });
-});
-
-router.patch('/:id/status', (_req, res) => {
-  return res.status(501).json({
-    message: 'PATCH /payments/:id/status ainda serÃ¡ implementado'
-  });
-});
-
-router.post('/:id/cancel', (_req, res) => {
-  return res.status(501).json({
-    message: 'POST /payments/:id/cancel ainda serÃ¡ implementado'
+    message: 'POST /payments/:id/cancel ainda será implementado'
   });
 });
 

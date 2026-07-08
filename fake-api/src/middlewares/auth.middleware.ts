@@ -7,14 +7,14 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction) 
   if (!authorization) {
     return res.status(401).json({
       code: 'UNAUTHORIZED',
-      message: 'Token de autenticaÃ§Ã£o nÃ£o informado'
+      message: 'Token de autenticação não informado'
     });
   }
 
   if (authorization !== `Bearer ${expectedToken}`) {
     return res.status(403).json({
       code: 'FORBIDDEN',
-      message: 'Token de autenticaÃ§Ã£o invÃ¡lido'
+      message: 'Token de autenticação inválido'
     });
   }
 
