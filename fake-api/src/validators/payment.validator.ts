@@ -25,3 +25,13 @@ export const createPaymentSchema = z.object({
 });
 
 export type CreatePaymentInput = z.infer<typeof createPaymentSchema>;
+
+export const updatePaymentStatusSchema = z.object({
+  status: z.enum(['APPROVED', 'REFUSED'], {
+    error: 'O campo status deve ser APPROVED ou REFUSED'
+  }),
+
+  reason: z.string().optional()
+});
+
+export type UpdatePaymentStatusInput = z.infer<typeof updatePaymentStatusSchema>;

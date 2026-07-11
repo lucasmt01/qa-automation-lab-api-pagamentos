@@ -52,3 +52,31 @@ export function expectCleanupResponse(
   expect(body.testRunId).toBe(testRunId);
   expect(body.deletedCount).toBeGreaterThanOrEqual(minimumDeletedCount);
 }
+
+export function expectPaymentStatusUpdatedResponse(
+  body: any,
+  expectedStatus: 'APPROVED' | 'REFUSED',
+  previousUpdatedAt: string,
+  reason?: string
+) {
+  expect(body.status).toBe(expectedStatus);
+
+  expect(body.updatedAt).toBeDefined();
+  expect(body.updatedAt).not.toBe(previousUpdatedAt);
+
+  expect(body.statusHistory).toBeDefined();
+  expect(Array.isArray(body.statusHistory)).toBeTruthy();
+  expect(body.statusHistory.length).toBeGreaterThanOrEqual(2);
+
+  const lastHistory = body.statusHistory[body.statusHistory.length - 1];
+
+  expect(lastHistory.from).toBe('PENDING');
+  expect(lastHistory.to).toBe(expectedStatus);
+  expect(lastHistory.changedAt).toBeDefined();
+
+  if (reason) {
+    expect(lastHistory.reason).toBe(reason);
+  }
+
+  expect(new Date(lastHistory.changedAt).toString()).not.toBe('Invalid Date');
+}

@@ -1,10 +1,11 @@
 ﻿import { randomUUID } from 'crypto';
 import { Payment } from '../models/payment.model';
-import { CreatePaymentInput } from '../validators/payment.validator';
+import { CreatePaymentInput, UpdatePaymentStatusInput } from '../validators/payment.validator';
 import {
   createPayment as createPaymentRepository,
   findPaymentById,
-  deletePaymentsByTestRunId as deletePaymentsByTestRunIdRepository
+  deletePaymentsByTestRunId as deletePaymentsByTestRunIdRepository,
+  updatePaymentStatusById
 } from '../repositories/payments.repository';
 
 export async function createPayment(input: CreatePaymentInput): Promise<Payment> {
@@ -18,6 +19,14 @@ export async function createPayment(input: CreatePaymentInput): Promise<Payment>
     customerDocument: input.customerDocument,
     description: input.description,
     status: 'PENDING',
+    statusHistory: [
+    {
+      from: null,
+      to: 'PENDING',
+      changedAt: now,
+      reason: 'Pagamento criado'
+    }
+  ],
     testRunId: input.testRunId,
     createdAt: now,
     updatedAt: now
@@ -28,6 +37,32 @@ export async function createPayment(input: CreatePaymentInput): Promise<Payment>
 
 export async function getPaymentById(id: string): Promise<Payment | null> {
   return findPaymentById(id);
+}
+
+export async function updatePaymentStatus(id: string, input: UpdatePaymentStatusInput): Promise<Payment | null> {
+  const payment = await findPaymentById(id);
+
+  if (!payment) {
+    return null;
+  }
+
+  if (payment.status !== 'PENDING') {
+    throw new Error('PAYMENT_STATUS_ALREADY_FINALIZED');
+  }
+
+  const now = new Date().toISOString();
+
+  return updatePaymentStatusById(
+    id,
+    input.status,
+    {
+      from: payment.status,
+      to: input.status,
+      changedAt: now,
+      reason: input.reason
+    },
+    now
+  );
 }
 
 export async function cleanupPaymentsByTestRunId(testRunId: string) {

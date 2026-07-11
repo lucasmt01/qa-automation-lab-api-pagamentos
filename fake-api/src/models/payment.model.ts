@@ -2,6 +2,13 @@
 
 export type PaymentMethod = 'PIX' | 'BOLETO' | 'CREDIT_CARD';
 
+export interface PaymentStatusHistory {
+  from: PaymentStatus | null;
+  to: PaymentStatus;
+  changedAt: string;
+  reason?: string;
+}
+
 export interface Payment {
   id: string;
   amount: number;
@@ -10,6 +17,7 @@ export interface Payment {
   customerDocument: string;
   description?: string;
   status: PaymentStatus;
+  statusHistory: PaymentStatusHistory[];
   testRunId: string;
   createdAt: string;
   updatedAt: string;
