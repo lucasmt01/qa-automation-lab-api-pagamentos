@@ -80,3 +80,32 @@ export function expectPaymentStatusUpdatedResponse(
 
   expect(new Date(lastHistory.changedAt).toString()).not.toBe('Invalid Date');
 }
+
+export function expectPaymentCancelledResponse(
+  body: any,
+  previousUpdatedAt: string,
+  reason?: string
+) {
+  expect(body.status).toBe('CANCELLED');
+
+  expect(body.updatedAt).toBeDefined();
+  expect(new Date(body.updatedAt).getTime()).toBeGreaterThanOrEqual(
+    new Date(previousUpdatedAt).getTime()
+  );
+
+  expect(body.statusHistory).toBeDefined();
+  expect(Array.isArray(body.statusHistory)).toBeTruthy();
+  expect(body.statusHistory.length).toBeGreaterThanOrEqual(2);
+
+  const lastHistory = body.statusHistory[body.statusHistory.length - 1];
+
+  expect(lastHistory.from).toBe('PENDING');
+  expect(lastHistory.to).toBe('CANCELLED');
+  expect(lastHistory.changedAt).toBeDefined();
+
+  if (reason) {
+    expect(lastHistory.reason).toBe(reason);
+  }
+
+  expect(new Date(lastHistory.changedAt).toString()).not.toBe('Invalid Date');
+}

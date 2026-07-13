@@ -35,3 +35,9 @@ export const updatePaymentStatusSchema = z.object({
 });
 
 export type UpdatePaymentStatusInput = z.infer<typeof updatePaymentStatusSchema>;
+
+export const cancelPaymentSchema = z.object({
+  reason: z.string().optional()
+});
+
+export type CancelPaymentInput = z.infer<typeof cancelPaymentSchema>;

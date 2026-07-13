@@ -73,3 +73,32 @@ export async function cleanupPaymentsByTestRunId(testRunId: string) {
     deletedCount
   };
 }
+
+export async function cancelPayment(
+  id: string,
+  reason?: string
+): Promise<Payment | null> {
+  const payment = await findPaymentById(id);
+
+  if (!payment) {
+    return null;
+  }
+
+  if (payment.status !== 'PENDING') {
+    throw new Error('PAYMENT_CANNOT_BE_CANCELLED');
+  }
+
+  const now = new Date().toISOString();
+
+  return updatePaymentStatusById(
+    id,
+    'CANCELLED',
+    {
+      from: payment.status,
+      to: 'CANCELLED',
+      changedAt: now,
+      reason: reason ?? 'Cancelamento solicitado'
+    },
+    now
+  );
+}

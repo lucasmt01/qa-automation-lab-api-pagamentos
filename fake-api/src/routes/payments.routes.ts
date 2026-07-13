@@ -3,7 +3,8 @@ import { authMiddleware } from '../middlewares/auth.middleware';
 import {
   createPaymentController,
   getPaymentByIdController,
-  updatePaymentStatusController
+  updatePaymentStatusController,
+  cancelPaymentController
 } from '../controllers/payments.controller';
 
 const router = Router();
@@ -14,10 +15,6 @@ router.get('/:id', authMiddleware, getPaymentByIdController);
 
 router.patch('/:id/status', authMiddleware, updatePaymentStatusController);
 
-router.post('/:id/cancel', authMiddleware, (_req, res) => {
-  return res.status(501).json({
-    message: 'POST /payments/:id/cancel ainda será implementado'
-  });
-});
+router.post('/:id/cancel', authMiddleware, cancelPaymentController);
 
 export default router;

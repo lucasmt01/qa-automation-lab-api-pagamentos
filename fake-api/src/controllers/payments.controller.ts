@@ -5,6 +5,8 @@ import {
   getPaymentById,
   updatePaymentStatus
 } from '../services/payments.service';
+import { cancelPayment } from '../services/payments.service';
+import { cancelPaymentSchema } from '../validators/payment.validator';
 
 export async function createPaymentController(req: Request, res: Response) {
   const validation = createPaymentSchema.safeParse(req.body);
@@ -91,6 +93,58 @@ export async function updatePaymentStatusController(req: Request, res: Response)
     return res.status(500).json({
       code: 'INTERNAL_SERVER_ERROR',
       message: 'Erro interno ao atualizar status do pagamento'
+    });
+  }
+}
+
+export async function cancelPaymentController(req: Request, res: Response) {
+  const id = req.params.id;
+
+  if (!id || typeof id !== 'string') {
+    return res.status(400).json({
+      code: 'INVALID_PAYMENT_ID',
+      message: 'O id do pagamento é obrigatório'
+    });
+  }
+
+  const validation = cancelPaymentSchema.safeParse(req.body ?? {});
+
+  if (!validation.success) {
+    return res.status(400).json({
+      code: 'INVALID_PAYLOAD',
+      message: 'Payload inválido',
+      details: validation.error.issues.map((issue) => ({
+        field: issue.path.join('.'),
+        message: issue.message
+      }))
+    });
+  }
+
+  try {
+    const payment = await cancelPayment(id, validation.data.reason);
+
+    if (!payment) {
+      return res.status(404).json({
+        code: 'PAYMENT_NOT_FOUND',
+        message: 'Pagamento não encontrado'
+      });
+    }
+
+    return res.status(200).json(payment);
+  } catch (error) {
+    if (
+      error instanceof Error &&
+      error.message === 'PAYMENT_CANNOT_BE_CANCELLED'
+    ) {
+      return res.status(409).json({
+        code: 'PAYMENT_CANNOT_BE_CANCELLED',
+        message: 'Pagamento não pode ser cancelado no status atual'
+      });
+    }
+
+    return res.status(500).json({
+      code: 'INTERNAL_SERVER_ERROR',
+      message: 'Erro interno ao cancelar pagamento'
     });
   }
 }

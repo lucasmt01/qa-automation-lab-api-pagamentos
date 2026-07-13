@@ -13,3 +13,8 @@
 | CT-011 | Tentar atualizar pagamento inexistente | `PATCH /payments/:id/status` | Negativo | Média | Automatizado |
 | CT-012 | Tentar atualizar pagamento com status inválido | `PATCH /payments/:id/status` | Validação / Negativo | Alta | Automatizado |
 | CT-013 | Tentar atualizar pagamento já finalizado | `PATCH /payments/:id/status` | Regra de negócio / Negativo | Alta | Automatizado |
+| CT-014 | Cancelar pagamento PENDING com sucesso | POST /payments/:id/cancel | Regra de negócio | Alta | Automatizado |
+| CT-015 | Tentar cancelar pagamento inexistente | POST /payments/:id/cancel | Negativo | Média | Automatizado |
+| CT-016 | Tentar cancelar pagamento APPROVED | POST /payments/:id/cancel | Regra de negócio / Negativo | Alta | Automatizado |
+| CT-017 | Tentar cancelar pagamento REFUSED | POST /payments/:id/cancel | Regra de negócio / Negativo | Alta | Automatizado |
+| CT-018 | Tentar cancelar pagamento já CANCELLED | POST /payments/:id/cancel | Regra de negócio / Negativo | Alta | Automatizado |
