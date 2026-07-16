@@ -1,12 +1,12 @@
 ﻿# QA Automation Lab - API de Pagamentos
 
-Projeto de portfólio criado para demonstrar práticas de qualidade de software em uma API REST de pagamentos, com foco em testes de backend, automação de API, validação de regras de negócio, controle de massa de dados, persistência em MongoDB e validação de contrato JSON.
+Projeto de portfólio criado para demonstrar práticas de qualidade de software em uma API REST de pagamentos, com foco em testes de backend, automação de API, validação de regras de negócio, controle de massa de dados, persistência em MongoDB, validação de contrato JSON e execução de collection Postman via Newman.
 
 ## Contexto
 
 A API simula fluxos comuns em produtos financeiros, como criação de pagamentos, consulta por identificador, atualização de status, cancelamento e expurgo de massa de teste.
 
-O projeto foi estruturado para representar um cenário próximo ao ambiente real de QA backend, onde os testes precisam validar não apenas o status code das respostas, mas também regras de negócio, persistência, contratos de resposta e limpeza dos dados utilizados na execução.
+O projeto foi estruturado para representar um cenário próximo ao ambiente real de QA backend, onde os testes precisam validar não apenas o status code das respostas, mas também regras de negócio, persistência, contratos de resposta, limpeza dos dados utilizados na execução e fluxos executáveis em diferentes ferramentas de teste.
 
 ## Funcionalidades da API
 
@@ -45,6 +45,7 @@ A suíte automatizada valida a API em diferentes camadas:
 - Expurgo de massa de teste
 - Validação de contrato JSON com AJV
 - Auditoria técnica diretamente no MongoDB
+- Smoke test dos principais fluxos via Postman/Newman
 
 ## Validação de contrato
 
@@ -63,6 +64,46 @@ Execução dos testes de contrato:
 npx playwright test tests/api/payments.contract.spec.ts
 ```
 
+## Auditoria técnica no MongoDB
+
+Além dos testes funcionais de API, o projeto possui uma suíte dedicada para validar a persistência dos dados diretamente no MongoDB.
+
+Essa suíte executa ações pela API e consulta a collection `payments` para confirmar se os documentos foram salvos, atualizados, cancelados e expurgados corretamente.
+
+Execução dos testes de auditoria:
+
+```bash
+npm run test:db
+```
+
+## Postman e Newman
+
+O projeto também possui uma collection Postman para execução dos principais fluxos da API.
+
+Arquivos utilizados:
+
+- `postman/payments.postman_collection.json`
+- `postman/local.postman_environment.json`
+
+A collection cobre:
+
+- Cleanup inicial da massa Postman
+- Health check
+- Criação de pagamento
+- Consulta de pagamento
+- Atualização de status para `APPROVED`
+- Tentativa de atualização de pagamento já finalizado
+- Criação de pagamento para cancelamento
+- Cancelamento de pagamento
+- Tentativa de cancelar pagamento já cancelado
+- Cleanup final da massa Postman
+
+Execução via Newman:
+
+```bash
+npm run postman:test
+```
+
 ## Stack utilizada
 
 ### Implementado atualmente
@@ -76,12 +117,14 @@ npx playwright test tests/api/payments.contract.spec.ts
 - Zod
 - AJV
 - AJV Formats
+- Postman
+- Newman
 
 ### Evoluções planejadas
 
-- Postman
-- Newman
 - GitHub Actions
+- Relatórios e evidências de execução
+- Interface web simples consumindo a API
 - Testes E2E com Playwright UI
 
 ## Estrutura do projeto
@@ -97,6 +140,8 @@ qa-automation-lab-api-pagamentos/
 ├── fake-api/
 │   └── src/
 ├── postman/
+│   ├── local.postman_environment.json
+│   └── payments.postman_collection.json
 ├── reports/
 ├── schemas/
 │   ├── error-response.schema.json
@@ -112,6 +157,7 @@ qa-automation-lab-api-pagamentos/
 │   │   └── test-data.cleanup.spec.ts
 │   ├── data/
 │   ├── database/
+│   │   └── payments.mongo-audit.spec.ts
 │   ├── fixtures/
 │   └── helpers/
 │       ├── auth.ts
@@ -199,7 +245,19 @@ npm run test:api
 npx playwright test tests/api/payments.contract.spec.ts
 ```
 
-### 7. Abrir relatório do Playwright
+### 7. Rodar os testes de auditoria no MongoDB
+
+```bash
+npm run test:db
+```
+
+### 8. Rodar a collection Postman via Newman
+
+```bash
+npm run postman:test
+```
+
+### 9. Abrir relatório do Playwright
 
 ```bash
 npm run test:report
@@ -305,12 +363,11 @@ A documentação inclui cenários de:
 - Cancelamento
 - Expurgo de massa
 - Validação de contrato
+- Auditoria técnica no MongoDB
+- Execução de fluxo principal via Postman/Newman
 
 ## Próximas evoluções
 
-- Testes de auditoria técnica diretamente no MongoDB
-- Collection Postman
-- Execução via Newman
 - Pipeline com GitHub Actions
 - Relatórios e evidências de execução
 - Interface web simples consumindo a API

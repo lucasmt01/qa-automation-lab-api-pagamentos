@@ -29,3 +29,4 @@
 | CT-027 | Validar atualização de status no MongoDB | MongoDB / payments | Auditoria técnica | Alta | Automatizado |
 | CT-028 | Validar cancelamento de pagamento no MongoDB | MongoDB / payments | Auditoria técnica | Alta | Automatizado |
 | CT-029 | Validar expurgo de massa de teste no MongoDB | MongoDB / payments | Auditoria técnica | Alta | Automatizado |
+| CT-030 | Executar fluxo principal via Postman/Newman | Collection Postman | Integração / Smoke | Média | Automatizado |

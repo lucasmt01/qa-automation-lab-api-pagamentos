@@ -1,15 +1,514 @@
 ﻿{
   "info": {
-    "name": "QA Automation Lab - Payments API",
-    "description": "Collection inicial da API simulada de pagamentos.",
+    "_postman_id": "48f53d3e-7c36-4f42-9c7c-qa-lab-payments",
+    "name": "QA Automation Lab - API de Pagamentos",
+    "description": "Collection Postman para validar os principais fluxos da API de pagamentos: health check, criação, consulta, atualização de status, cancelamento e expurgo de massa.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "Health Check",
+      "name": "00 - Cleanup inicial da massa Postman",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code deve ser 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const body = pm.response.json();",
+              "",
+              "pm.test('Deve retornar mensagem de expurgo', function () {",
+              "  pm.expect(body.message).to.eql('Massa de teste expurgada com sucesso');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/test-data/payments?testRunId={{testRunId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "test-data",
+            "payments"
+          ],
+          "query": [
+            {
+              "key": "testRunId",
+              "value": "{{testRunId}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "01 - Health check",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code deve ser 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const body = pm.response.json();",
+              "",
+              "pm.test('Service deve estar UP', function () {",
+              "  pm.expect(body.status).to.eql('UP');",
+              "});"
+            ]
+          }
+        }
+      ],
       "request": {
         "method": "GET",
-        "url": "{{baseUrl}}/health"
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "health"
+          ]
+        }
+      }
+    },
+    {
+      "name": "02 - Criar pagamento para fluxo de status",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code deve ser 201', function () {",
+              "  pm.response.to.have.status(201);",
+              "});",
+              "",
+              "const body = pm.response.json();",
+              "",
+              "pm.test('Deve retornar id do pagamento', function () {",
+              "  pm.expect(body.id).to.include('pay_');",
+              "});",
+              "",
+              "pm.test('Pagamento deve nascer como PENDING', function () {",
+              "  pm.expect(body.status).to.eql('PENDING');",
+              "});",
+              "",
+              "pm.test('Deve retornar o testRunId esperado', function () {",
+              "  pm.expect(body.testRunId).to.eql(pm.environment.get('testRunId'));",
+              "});",
+              "",
+              "pm.environment.set('paymentId', body.id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"amount\": 150.75,\n  \"currency\": \"BRL\",\n  \"paymentMethod\": \"PIX\",\n  \"customerDocument\": \"12345678909\",\n  \"description\": \"Pagamento criado via Postman Newman\",\n  \"testRunId\": \"{{testRunId}}\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/payments",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "payments"
+          ]
+        }
+      }
+    },
+    {
+      "name": "03 - Consultar pagamento criado",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code deve ser 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const body = pm.response.json();",
+              "",
+              "pm.test('Deve consultar o mesmo pagamento criado', function () {",
+              "  pm.expect(body.id).to.eql(pm.environment.get('paymentId'));",
+              "});",
+              "",
+              "pm.test('Status deve ser PENDING', function () {",
+              "  pm.expect(body.status).to.eql('PENDING');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/payments/{{paymentId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "payments",
+            "{{paymentId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "04 - Atualizar pagamento para APPROVED",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code deve ser 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const body = pm.response.json();",
+              "",
+              "pm.test('Status deve ser APPROVED', function () {",
+              "  pm.expect(body.status).to.eql('APPROVED');",
+              "});",
+              "",
+              "pm.test('Historico deve possuir ao menos 2 registros', function () {",
+              "  pm.expect(body.statusHistory.length).to.be.at.least(2);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"APPROVED\",\n  \"reason\": \"Pagamento aprovado via Postman Newman\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/payments/{{paymentId}}/status",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "payments",
+            "{{paymentId}}",
+            "status"
+          ]
+        }
+      }
+    },
+    {
+      "name": "05 - Tentar atualizar pagamento finalizado",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code deve ser 409', function () {",
+              "  pm.response.to.have.status(409);",
+              "});",
+              "",
+              "const body = pm.response.json();",
+              "",
+              "pm.test('Deve retornar erro de pagamento finalizado', function () {",
+              "  pm.expect(body.code).to.eql('PAYMENT_STATUS_ALREADY_FINALIZED');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"REFUSED\",\n  \"reason\": \"Tentativa de alterar pagamento finalizado via Postman Newman\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/payments/{{paymentId}}/status",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "payments",
+            "{{paymentId}}",
+            "status"
+          ]
+        }
+      }
+    },
+    {
+      "name": "06 - Criar pagamento para cancelamento",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code deve ser 201', function () {",
+              "  pm.response.to.have.status(201);",
+              "});",
+              "",
+              "const body = pm.response.json();",
+              "",
+              "pm.test('Pagamento deve nascer como PENDING', function () {",
+              "  pm.expect(body.status).to.eql('PENDING');",
+              "});",
+              "",
+              "pm.environment.set('cancelPaymentId', body.id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"amount\": 89.9,\n  \"currency\": \"BRL\",\n  \"paymentMethod\": \"PIX\",\n  \"customerDocument\": \"12345678909\",\n  \"description\": \"Pagamento para cancelamento via Postman Newman\",\n  \"testRunId\": \"{{testRunId}}\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/payments",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "payments"
+          ]
+        }
+      }
+    },
+    {
+      "name": "07 - Cancelar pagamento PENDING",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code deve ser 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const body = pm.response.json();",
+              "",
+              "pm.test('Status deve ser CANCELLED', function () {",
+              "  pm.expect(body.status).to.eql('CANCELLED');",
+              "});",
+              "",
+              "pm.test('Historico deve possuir ao menos 2 registros', function () {",
+              "  pm.expect(body.statusHistory.length).to.be.at.least(2);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"reason\": \"Cancelamento via Postman Newman\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/payments/{{cancelPaymentId}}/cancel",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "payments",
+            "{{cancelPaymentId}}",
+            "cancel"
+          ]
+        }
+      }
+    },
+    {
+      "name": "08 - Tentar cancelar pagamento ja cancelado",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code deve ser 409', function () {",
+              "  pm.response.to.have.status(409);",
+              "});",
+              "",
+              "const body = pm.response.json();",
+              "",
+              "pm.test('Deve retornar erro de cancelamento invalido', function () {",
+              "  pm.expect(body.code).to.eql('PAYMENT_CANNOT_BE_CANCELLED');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"reason\": \"Tentativa de cancelar novamente via Postman Newman\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/payments/{{cancelPaymentId}}/cancel",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "payments",
+            "{{cancelPaymentId}}",
+            "cancel"
+          ]
+        }
+      }
+    },
+    {
+      "name": "09 - Cleanup final da massa Postman",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code deve ser 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const body = pm.response.json();",
+              "",
+              "pm.test('Deve expurgar pelo menos um documento', function () {",
+              "  pm.expect(body.deletedCount).to.be.above(0);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/test-data/payments?testRunId={{testRunId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "test-data",
+            "payments"
+          ],
+          "query": [
+            {
+              "key": "testRunId",
+              "value": "{{testRunId}}"
+            }
+          ]
+        }
       }
     }
   ]
