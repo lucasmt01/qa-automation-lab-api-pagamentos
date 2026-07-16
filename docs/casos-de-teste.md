@@ -18,3 +18,14 @@
 | CT-016 | Tentar cancelar pagamento APPROVED | POST /payments/:id/cancel | Regra de negócio / Negativo | Alta | Automatizado |
 | CT-017 | Tentar cancelar pagamento REFUSED | POST /payments/:id/cancel | Regra de negócio / Negativo | Alta | Automatizado |
 | CT-018 | Tentar cancelar pagamento já CANCELLED | POST /payments/:id/cancel | Regra de negócio / Negativo | Alta | Automatizado |
+| CT-019 | Validar contrato da criação de pagamento | POST /payments | Contrato | Alta | Automatizado |
+| CT-020 | Validar contrato da consulta de pagamento | GET /payments/:id | Contrato | Alta | Automatizado |
+| CT-021 | Validar contrato da atualização de status | PATCH /payments/:id/status | Contrato | Alta | Automatizado |
+| CT-022 | Validar contrato do cancelamento de pagamento | POST /payments/:id/cancel | Contrato | Alta | Automatizado |
+| CT-023 | Validar contrato de erro 400 | POST /payments | Contrato / Negativo | Média | Automatizado |
+| CT-024 | Validar contrato de erro 404 | GET /payments/:id | Contrato / Negativo | Média | Automatizado |
+| CT-025 | Validar contrato de erro 409 | POST /payments/:id/cancel | Contrato / Negativo | Alta | Automatizado |
+| CT-026 | Validar persistência do pagamento criado no MongoDB | MongoDB / payments | Auditoria técnica | Alta | Automatizado |
+| CT-027 | Validar atualização de status no MongoDB | MongoDB / payments | Auditoria técnica | Alta | Automatizado |
+| CT-028 | Validar cancelamento de pagamento no MongoDB | MongoDB / payments | Auditoria técnica | Alta | Automatizado |
+| CT-029 | Validar expurgo de massa de teste no MongoDB | MongoDB / payments | Auditoria técnica | Alta | Automatizado |

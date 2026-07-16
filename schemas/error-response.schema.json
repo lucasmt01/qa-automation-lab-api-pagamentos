@@ -1,11 +1,42 @@
-﻿{
+{
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "ErrorResponse",
+  "title": "Error Response Schema",
   "type": "object",
+  "additionalProperties": false,
   "required": ["code", "message"],
   "properties": {
-    "code": { "type": "string" },
-    "message": { "type": "string" }
-  },
-  "additionalProperties": false
+    "code": {
+      "type": "string",
+      "enum": [
+        "UNAUTHORIZED",
+        "FORBIDDEN",
+        "INVALID_PAYLOAD",
+        "PAYMENT_NOT_FOUND",
+        "PAYMENT_STATUS_ALREADY_FINALIZED",
+        "PAYMENT_CANNOT_BE_CANCELLED",
+        "INVALID_TEST_RUN_ID",
+        "INVALID_PAYMENT_ID",
+        "INTERNAL_SERVER_ERROR"
+      ]
+    },
+    "message": {
+      "type": "string"
+    },
+    "details": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["field", "message"],
+        "properties": {
+          "field": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
 }

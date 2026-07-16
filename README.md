@@ -44,6 +44,7 @@ A suíte automatizada valida a API em diferentes camadas:
 - Validação de persistência por consulta
 - Expurgo de massa de teste
 - Validação de contrato JSON com AJV
+- Auditoria técnica diretamente no MongoDB
 
 ## Validação de contrato
 
@@ -317,4 +318,4 @@ A documentação inclui cenários de:
 
 ## Autor
 
-Projeto desenvolvido por Lucas Eduardo Mota como parte de um laboratório prático de qualidade de software, automação de testes e validação de APIs.
+Projeto desenvolvido como parte de um laboratório prático de qualidade de software, automação de testes e validação de APIs.
