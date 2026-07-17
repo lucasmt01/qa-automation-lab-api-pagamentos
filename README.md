@@ -119,10 +119,10 @@ npm run postman:test
 - AJV Formats
 - Postman
 - Newman
+- GitHub Actions
 
 ### Evoluções planejadas
 
-- GitHub Actions
 - Relatórios e evidências de execução
 - Interface web simples consumindo a API
 - Testes E2E com Playwright UI
@@ -366,9 +366,28 @@ A documentação inclui cenários de:
 - Auditoria técnica no MongoDB
 - Execução de fluxo principal via Postman/Newman
 
+## CI com GitHub Actions
+
+O projeto possui uma pipeline no GitHub Actions para executar automaticamente as validações da API.
+
+A pipeline é executada em eventos de `push` e `pull_request` e realiza as seguintes etapas:
+
+- Instalação das dependências
+- Build da fake API
+- Inicialização de um serviço MongoDB
+- Subida da API
+- Verificação do endpoint `/health`
+- Execução dos testes Playwright API
+- Execução dos testes de auditoria no MongoDB
+- Execução da collection Postman via Newman
+- Upload do relatório Playwright como artefato
+
+Arquivo da pipeline:
+
+`/.github/workflows/api-tests.yml`
+
 ## Próximas evoluções
 
-- Pipeline com GitHub Actions
 - Relatórios e evidências de execução
 - Interface web simples consumindo a API
 - Testes E2E com Playwright UI
