@@ -1,12 +1,12 @@
 ﻿# QA Automation Lab - API de Pagamentos
 
-Projeto de portfólio criado para demonstrar práticas de qualidade de software em uma API REST de pagamentos, com foco em testes de backend, automação de API, validação de regras de negócio, controle de massa de dados, persistência em MongoDB, validação de contrato JSON e execução de collection Postman via Newman.
+Projeto de portfólio criado para demonstrar práticas de qualidade de software em uma API REST de pagamentos, com foco em testes de backend, automação de API, validação de regras de negócio, controle de massa de dados, persistência em MongoDB, validação de contrato JSON, auditoria técnica em banco, execução de collection Postman via Newman e integração com CI/CD.
 
 ## Contexto
 
 A API simula fluxos comuns em produtos financeiros, como criação de pagamentos, consulta por identificador, atualização de status, cancelamento e expurgo de massa de teste.
 
-O projeto foi estruturado para representar um cenário próximo ao ambiente real de QA backend, onde os testes precisam validar não apenas o status code das respostas, mas também regras de negócio, persistência, contratos de resposta, limpeza dos dados utilizados na execução e fluxos executáveis em diferentes ferramentas de teste.
+O projeto foi estruturado para representar um cenário próximo ao ambiente real de QA backend, onde os testes precisam validar não apenas o status code das respostas, mas também regras de negócio, autenticação, payloads inválidos, persistência, contratos de resposta, limpeza dos dados utilizados na execução e fluxos executáveis em diferentes ferramentas de teste.
 
 ## Funcionalidades da API
 
@@ -31,6 +31,8 @@ Atualmente a API cobre os seguintes fluxos:
 - Pagamentos `APPROVED`, `REFUSED` ou `CANCELLED` não podem ser cancelados
 - Toda mudança de status é registrada em `statusHistory`
 - Dados de teste podem ser removidos por `testRunId`
+- Endpoints protegidos exigem autenticação via token
+- Payloads inválidos devem retornar erro de validação
 
 ## Estratégia de testes
 
@@ -39,6 +41,8 @@ A suíte automatizada valida a API em diferentes camadas:
 - Testes funcionais de endpoints REST
 - Testes de regras de negócio
 - Testes de cenários negativos
+- Testes dedicados de autenticação
+- Testes de validação de payload e campos obrigatórios
 - Validação de autenticação
 - Validação de payloads inválidos
 - Validação de persistência por consulta
@@ -46,6 +50,7 @@ A suíte automatizada valida a API em diferentes camadas:
 - Validação de contrato JSON com AJV
 - Auditoria técnica diretamente no MongoDB
 - Smoke test dos principais fluxos via Postman/Newman
+- Execução automatizada no GitHub Actions
 
 ## Validação de contrato
 
@@ -131,6 +136,9 @@ npm run postman:test
 
 ```txt
 qa-automation-lab-api-pagamentos/
+├── .github/
+│   └── workflows/
+│       └── api-tests.yml
 ├── docs/
 │   ├── casos-de-teste.md
 │   ├── estrategia-de-massa-de-dados.md
@@ -148,12 +156,14 @@ qa-automation-lab-api-pagamentos/
 │   └── payment-response.schema.json
 ├── tests/
 │   ├── api/
+│   │   ├── auth.spec.ts
 │   │   ├── health.spec.ts
 │   │   ├── payments.cancel.spec.ts
 │   │   ├── payments.contract.spec.ts
 │   │   ├── payments.create.spec.ts
 │   │   ├── payments.get.spec.ts
 │   │   ├── payments.status.spec.ts
+│   │   ├── payments.validation.spec.ts
 │   │   └── test-data.cleanup.spec.ts
 │   ├── data/
 │   ├── database/
@@ -191,7 +201,7 @@ qa-automation-lab-api-pagamentos/
 npm install
 ```
 
-### 2. Instalar dependências da fake API
+### 2. Instalar dependências da API simulada de pagamentos
 
 ```bash
 npm --prefix fake-api install
@@ -251,13 +261,25 @@ npx playwright test tests/api/payments.contract.spec.ts
 npm run test:db
 ```
 
-### 8. Rodar a collection Postman via Newman
+### 8. Rodar todos os testes Playwright
+
+```bash
+npm run test:playwright
+```
+
+### 9. Rodar a collection Postman via Newman
 
 ```bash
 npm run postman:test
 ```
 
-### 9. Abrir relatório do Playwright
+### 10. Rodar toda a suíte automatizada
+
+```bash
+npm run test:all
+```
+
+### 11. Abrir relatório do Playwright
 
 ```bash
 npm run test:report
@@ -359,6 +381,7 @@ A documentação inclui cenários de:
 - Consulta de pagamento
 - Validação de autenticação
 - Validação de payload inválido
+- Validação de campos obrigatórios
 - Atualização de status
 - Cancelamento
 - Expurgo de massa
@@ -373,14 +396,14 @@ O projeto possui uma pipeline no GitHub Actions para executar automaticamente as
 A pipeline é executada em eventos de `push` e `pull_request` e realiza as seguintes etapas:
 
 - Instalação das dependências
-- Build da fake API
+- Build da API simulada de pagamentos
 - Inicialização de um serviço MongoDB
 - Subida da API
 - Verificação do endpoint `/health`
-- Execução dos testes Playwright API
-- Execução dos testes de auditoria no MongoDB
+- Execução dos testes Playwright API e MongoDB Audit
 - Execução da collection Postman via Newman
 - Upload do relatório Playwright como artefato
+- Upload dos logs da API como artefato
 
 Arquivo da pipeline:
 

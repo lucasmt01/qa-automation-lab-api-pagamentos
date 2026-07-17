@@ -12,6 +12,8 @@
     "test": "playwright test",
     "test:api": "playwright test tests/api",
     "test:db": "playwright test tests/database",
+    "test:playwright": "playwright test tests/api tests/database",
+    "test:all": "npm run test:playwright && npm run postman:test",
     "test:report": "playwright show-report reports/playwright-report",
     "postman:test": "newman run postman/payments.postman_collection.json -e postman/local.postman_environment.json",
     "install:api": "npm --prefix fake-api install",

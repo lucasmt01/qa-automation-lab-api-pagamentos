@@ -71,7 +71,7 @@ jobs:
           exit 1
 
       - name: Run Playwright tests
-        run: npx playwright test tests/api tests/database
+        run: npm run test:playwright
 
       - name: Run Postman collection with Newman
         run: npm run postman:test

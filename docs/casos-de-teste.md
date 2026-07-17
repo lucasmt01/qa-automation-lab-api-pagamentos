@@ -30,3 +30,14 @@
 | CT-028 | Validar cancelamento de pagamento no MongoDB | MongoDB / payments | Auditoria técnica | Alta | Automatizado |
 | CT-029 | Validar expurgo de massa de teste no MongoDB | MongoDB / payments | Auditoria técnica | Alta | Automatizado |
 | CT-030 | Executar fluxo principal via Postman/Newman | Collection Postman | Integração / Smoke | Média | Automatizado |
+| CT-031 | Criar pagamento sem token | POST /payments | Autenticação / Negativo | Alta | Automatizado |
+| CT-032 | Criar pagamento com token inválido | POST /payments | Autenticação / Negativo | Alta | Automatizado |
+| CT-033 | Consultar pagamento sem token | GET /payments/:id | Autenticação / Negativo | Média | Automatizado |
+| CT-034 | Expurgar massa sem token | DELETE /test-data/payments | Autenticação / Negativo | Média | Automatizado |
+| CT-035 | Criar pagamento sem amount | POST /payments | Validação / Negativo | Alta | Automatizado |
+| CT-036 | Criar pagamento com amount negativo | POST /payments | Validação / Negativo | Alta | Automatizado |
+| CT-037 | Criar pagamento com amount zero | POST /payments | Validação / Negativo | Alta | Automatizado |
+| CT-038 | Criar pagamento com currency inválida | POST /payments | Validação / Negativo | Média | Automatizado |
+| CT-039 | Criar pagamento com paymentMethod inválido | POST /payments | Validação / Negativo | Média | Automatizado |
+| CT-040 | Criar pagamento sem customerDocument | POST /payments | Validação / Negativo | Alta | Automatizado |
+| CT-041 | Atualizar status sem informar status | PATCH /payments/:id/status | Validação / Negativo | Alta | Automatizado |
