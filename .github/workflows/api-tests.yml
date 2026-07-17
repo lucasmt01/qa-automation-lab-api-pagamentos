@@ -30,13 +30,14 @@ jobs:
       API_TOKEN: qa-lab-token
       MONGO_URI: mongodb://localhost:27017
       MONGO_DATABASE: qa_lab_payments
+      BASE_URL: http://127.0.0.1:3000
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 24
 
@@ -56,7 +57,7 @@ jobs:
       - name: Wait for API health check
         run: |
           for i in {1..30}; do
-            if curl -s http://localhost:3000/health | grep "UP"; then
+            if curl -s http://127.0.0.1:3000/health | grep "UP"; then
               echo "API is ready"
               exit 0
             fi
@@ -69,11 +70,8 @@ jobs:
           cat api.log
           exit 1
 
-      - name: Run Playwright API tests
-        run: npm run test:api
-
-      - name: Run MongoDB audit tests
-        run: npm run test:db
+      - name: Run Playwright tests
+        run: npx playwright test tests/api tests/database
 
       - name: Run Postman collection with Newman
         run: npm run postman:test
