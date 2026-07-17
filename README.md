@@ -371,9 +371,7 @@ Essa estratégia evita sujeira no banco e simula uma prática comum em automaç�
 
 Os casos de teste estão documentados em:
 
-```txt
-docs/casos-de-teste.md
-```
+`docs/casos-de-teste.md`
 
 A documentação inclui cenários de:
 
@@ -388,6 +386,18 @@ A documentação inclui cenários de:
 - Validação de contrato
 - Auditoria técnica no MongoDB
 - Execução de fluxo principal via Postman/Newman
+- Execução em pipeline CI
+
+## Documentação complementar
+
+Além dos casos de teste, o projeto possui documentos auxiliares em `docs/`:
+
+| Documento | Objetivo |
+|---|---|
+| `docs/plano-de-testes.md` | Define escopo, tipos de teste, ferramentas, critérios e riscos |
+| `docs/estrategia-de-massa-de-dados.md` | Explica o uso de `testRunId` e a estratégia de expurgo |
+| `docs/evidencias.md` | Descreve evidências geradas localmente e no CI |
+| `docs/relatorio-execucao.md` | Resume execução, suítes, comandos, critérios de sucesso e evidências |
 
 ## CI com GitHub Actions
 
@@ -411,7 +421,6 @@ Arquivo da pipeline:
 
 ## Próximas evoluções
 
-- Relatórios e evidências de execução
 - Interface web simples consumindo a API
 - Testes E2E com Playwright UI
 
