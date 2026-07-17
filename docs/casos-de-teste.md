@@ -1,5 +1,5 @@
-﻿| ID | Cenário | Tipo | Prioridade | Status |
-|---|---|---|---|---|
+﻿| ID | Cenário | Endpoint/Ferramenta | Tipo | Prioridade | Status |
+|---|---|---|---|---|---|
 | CT-001 | Health check da API | Smoke | Alta | Automatizado |
 | CT-002 | Criar pagamento PIX com sucesso | API | Alta | Automatizado |
 | CT-003 | Criar pagamento sem autenticação | Segurança/API | Alta | Automatizado |

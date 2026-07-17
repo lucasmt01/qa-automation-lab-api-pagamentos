@@ -1,7 +1,7 @@
 {
-  "name": "qa-lab-fake-api",
+  "name": "qa-lab-payments-api",
+  "description": "API simulada de pagamentos para projeto de automação de testes.",
   "version": "1.0.0",
-  "description": "API fake de pagamentos para projeto de automação de testes.",
   "private": true,
   "scripts": {
     "dev": "tsx watch src/server.ts",

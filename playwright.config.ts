@@ -10,7 +10,10 @@ export default defineConfig({
     ['junit', { outputFile: 'reports/junit-results.xml' }]
   ],
   use: {
-    baseURL: process.env.API_BASE_URL ?? 'http://localhost:3000',
+    baseURL:
+      process.env.API_BASE_URL ??
+      process.env.BASE_URL ??
+      'http://127.0.0.1:3000',
     extraHTTPHeaders: {
       'Content-Type': 'application/json'
     }

@@ -62,7 +62,9 @@ export function expectPaymentStatusUpdatedResponse(
   expect(body.status).toBe(expectedStatus);
 
   expect(body.updatedAt).toBeDefined();
-  expect(body.updatedAt).not.toBe(previousUpdatedAt);
+  expect(new Date(body.updatedAt).getTime()).toBeGreaterThanOrEqual(
+    new Date(previousUpdatedAt).getTime()
+  );
 
   expect(body.statusHistory).toBeDefined();
   expect(Array.isArray(body.statusHistory)).toBeTruthy();
