@@ -1,5 +1,7 @@
 export type PaymentStatus = 'PENDING' | 'APPROVED' | 'REFUSED' | 'CANCELLED';
 
+export type PaymentStatusFilter = PaymentStatus | 'ALL';
+
 export type PaymentMethod = 'PIX' | 'BOLETO' | 'CREDIT_CARD';
 
 export type PaymentStatusHistory = {
@@ -28,3 +30,5 @@ export type PaymentFormData = {
   customerDocument: string;
   description: string;
 };
+
+export type PaymentFormErrors = Partial<Record<keyof PaymentFormData, string>>;

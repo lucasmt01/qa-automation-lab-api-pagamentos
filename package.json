@@ -17,7 +17,10 @@
     "test:report": "playwright show-report reports/playwright-report",
     "postman:test": "newman run postman/payments.postman_collection.json -e postman/local.postman_environment.json",
     "install:api": "npm --prefix fake-api install",
-    "install:all": "npm install && npm --prefix fake-api install"
+    "install:all": "npm install && npm --prefix fake-api install",
+    "web:dev": "npm --prefix web-app run dev",
+    "web:build": "npm --prefix web-app run build",
+    "web:preview": "npm --prefix web-app run preview"
   },
   "keywords": [
     "qa",

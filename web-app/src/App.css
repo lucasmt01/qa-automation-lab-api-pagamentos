@@ -711,6 +711,18 @@ tbody tr:hover {
   color: #93a4bd;
 }
 
+tbody tr:focus-visible {
+  outline: 3px solid rgba(56, 189, 248, 0.8);
+  outline-offset: -3px;
+  background: rgba(56, 189, 248, 0.12);
+}
+
+.details-panel:focus-visible,
+.empty-details-panel:focus-visible {
+  outline: 3px solid rgba(56, 189, 248, 0.7);
+  outline-offset: 4px;
+}
+
 @media (max-width: 1180px) {
   .dashboard-layout {
     grid-template-columns: 1fr;

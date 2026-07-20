@@ -1,0 +1,1 @@
+export type FeedbackVariant = 'info' | 'success' | 'error';
