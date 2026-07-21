@@ -17,6 +17,24 @@ export async function createPayment(payment: Payment): Promise<Payment> {
   return payment;
 }
 
+export async function findPaymentsByTestRunId(testRunId: string): Promise<Payment[]> {
+  const collection = await getPaymentsCollection();
+
+  const payments = await collection
+    .find(
+      { testRunId },
+      {
+        projection: {
+          _id: 0
+        }
+      }
+    )
+    .sort({ createdAt: -1 })
+    .toArray();
+
+  return payments;
+}
+
 export async function findPaymentById(id: string): Promise<Payment | null> {
   const collection = await getPaymentsCollection();
 

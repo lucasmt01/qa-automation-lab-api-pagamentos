@@ -4,30 +4,37 @@ import { methodLabels, statusLabels } from '../utils/payment-labels';
 
 type PaymentDetailsProps = {
   selectedPayment?: Payment;
+  isActionLoading: boolean;
   onUpdateStatus: (
     paymentId: string,
     nextStatus: Exclude<PaymentStatus, 'PENDING'>,
     reason: string
-  ) => void;
+  ) => void | Promise<void>;
 };
 
 export function PaymentDetails({
   selectedPayment,
+  isActionLoading,
   onUpdateStatus
 }: PaymentDetailsProps) {
   if (!selectedPayment) {
     return (
-      <section className="panel empty-details-panel" 
-               id="payment-details-section"
-               tabIndex={-1}
+      <section
+        className="panel empty-details-panel"
+        id="payment-details-section"
+        tabIndex={-1}
       >
         <strong>Nenhum pagamento selecionado</strong>
         <span>
-          Selecione um pagamento na tabela ou remova os filtros aplicados.
+          Crie um pagamento ou selecione um registro na tabela para visualizar os
+          detalhes.
         </span>
       </section>
     );
   }
+
+  const actionButtonsDisabled =
+    selectedPayment.status !== 'PENDING' || isActionLoading;
 
   return (
     <section
@@ -73,7 +80,7 @@ export function PaymentDetails({
 
       <div className="description-box">
         <span>Descrição</span>
-        <p>{selectedPayment.description}</p>
+        <p>{selectedPayment.description || 'Sem descrição informada.'}</p>
       </div>
 
       <div className="actions-row">
@@ -81,7 +88,7 @@ export function PaymentDetails({
           type="button"
           className="success-button"
           data-testid="approve-payment-button"
-          disabled={selectedPayment.status !== 'PENDING'}
+          disabled={actionButtonsDisabled}
           onClick={() =>
             onUpdateStatus(
               selectedPayment.id,
@@ -97,7 +104,7 @@ export function PaymentDetails({
           type="button"
           className="danger-button"
           data-testid="refuse-payment-button"
-          disabled={selectedPayment.status !== 'PENDING'}
+          disabled={actionButtonsDisabled}
           onClick={() =>
             onUpdateStatus(
               selectedPayment.id,
@@ -113,7 +120,7 @@ export function PaymentDetails({
           type="button"
           className="neutral-button"
           data-testid="cancel-payment-button"
-          disabled={selectedPayment.status !== 'PENDING'}
+          disabled={actionButtonsDisabled}
           onClick={() =>
             onUpdateStatus(
               selectedPayment.id,
@@ -141,7 +148,7 @@ export function PaymentDetails({
                       }`
                     : statusLabels[historyItem.to]}
                 </strong>
-                <p>{historyItem.reason}</p>
+                <p>{historyItem.reason || 'Alteração de status registrada.'}</p>
                 <small>{formatDate(historyItem.changedAt)}</small>
               </div>
             </div>

@@ -1,12 +1,16 @@
 ﻿import { Request, Response } from 'express';
-import { createPaymentSchema, updatePaymentStatusSchema } from '../validators/payment.validator';
 import {
+  cancelPaymentSchema,
+  createPaymentSchema,
+  updatePaymentStatusSchema
+} from '../validators/payment.validator';
+import {
+  cancelPayment,
   createPayment,
   getPaymentById,
+  listPaymentsByTestRunId,
   updatePaymentStatus
 } from '../services/payments.service';
-import { cancelPayment } from '../services/payments.service';
-import { cancelPaymentSchema } from '../validators/payment.validator';
 
 export async function createPaymentController(req: Request, res: Response) {
   const validation = createPaymentSchema.safeParse(req.body);
@@ -25,6 +29,21 @@ export async function createPaymentController(req: Request, res: Response) {
   const payment = await createPayment(validation.data);
 
   return res.status(201).json(payment);
+}
+
+export async function listPaymentsController(req: Request, res: Response) {
+  const { testRunId } = req.query;
+
+  if (!testRunId || typeof testRunId !== 'string') {
+    return res.status(400).json({
+      code: 'INVALID_TEST_RUN_ID',
+      message: 'O parâmetro testRunId é obrigatório'
+    });
+  }
+
+  const result = await listPaymentsByTestRunId(testRunId);
+
+  return res.status(200).json(result);
 }
 
 export async function getPaymentByIdController(req: Request, res: Response) {
@@ -58,6 +77,7 @@ export async function updatePaymentStatusController(req: Request, res: Response)
       message: 'O id do pagamento é obrigatório'
     });
   }
+
   const validation = updatePaymentStatusSchema.safeParse(req.body);
 
   if (!validation.success) {

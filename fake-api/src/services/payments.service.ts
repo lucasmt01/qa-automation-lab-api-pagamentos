@@ -4,6 +4,7 @@ import { CreatePaymentInput, UpdatePaymentStatusInput } from '../validators/paym
 import {
   createPayment as createPaymentRepository,
   findPaymentById,
+  findPaymentsByTestRunId,
   deletePaymentsByTestRunId as deletePaymentsByTestRunIdRepository,
   updatePaymentStatusById
 } from '../repositories/payments.repository';
@@ -20,19 +21,28 @@ export async function createPayment(input: CreatePaymentInput): Promise<Payment>
     description: input.description,
     status: 'PENDING',
     statusHistory: [
-    {
-      from: null,
-      to: 'PENDING',
-      changedAt: now,
-      reason: 'Pagamento criado'
-    }
-  ],
+      {
+        from: null,
+        to: 'PENDING',
+        changedAt: now,
+        reason: 'Pagamento criado'
+      }
+    ],
     testRunId: input.testRunId,
     createdAt: now,
     updatedAt: now
   };
 
   return createPaymentRepository(payment);
+}
+
+export async function listPaymentsByTestRunId(testRunId: string) {
+  const payments = await findPaymentsByTestRunId(testRunId);
+
+  return {
+    items: payments,
+    total: payments.length
+  };
 }
 
 export async function getPaymentById(id: string): Promise<Payment | null> {

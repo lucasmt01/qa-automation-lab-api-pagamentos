@@ -8,13 +8,15 @@ import type {
 type PaymentFormProps = {
   formData: PaymentFormData;
   formErrors: PaymentFormErrors;
-  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  isSubmitting: boolean;
+  onSubmit: (event: FormEvent<HTMLFormElement>) => void | Promise<void>;
   onInputChange: (field: keyof PaymentFormData, value: string) => void;
 };
 
 export function PaymentForm({
   formData,
   formErrors,
+  isSubmitting,
   onSubmit,
   onInputChange
 }: PaymentFormProps) {
@@ -38,6 +40,7 @@ export function PaymentForm({
             type="text"
             placeholder="150,75"
             value={formData.amount}
+            disabled={isSubmitting}
             onChange={(event) => onInputChange('amount', event.target.value)}
           />
           {formErrors.amount && (
@@ -53,6 +56,7 @@ export function PaymentForm({
             id="paymentMethod"
             data-testid="payment-method-select"
             value={formData.paymentMethod}
+            disabled={isSubmitting}
             onChange={(event) =>
               onInputChange('paymentMethod', event.target.value as PaymentMethod)
             }
@@ -72,6 +76,7 @@ export function PaymentForm({
             type="text"
             placeholder="12345678909"
             value={formData.customerDocument}
+            disabled={isSubmitting}
             onChange={(event) =>
               onInputChange('customerDocument', event.target.value)
             }
@@ -93,6 +98,7 @@ export function PaymentForm({
             data-testid="description-input"
             placeholder="Descrição do pagamento"
             value={formData.description}
+            disabled={isSubmitting}
             onChange={(event) => onInputChange('description', event.target.value)}
           />
         </label>
@@ -101,8 +107,9 @@ export function PaymentForm({
           type="submit"
           className="primary-button"
           data-testid="create-payment-button"
+          disabled={isSubmitting}
         >
-          Criar pagamento
+          {isSubmitting ? 'Criando...' : 'Criar pagamento'}
         </button>
 
         <p className="form-hint">

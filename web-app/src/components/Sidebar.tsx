@@ -34,7 +34,7 @@ export function Sidebar() {
 
       <div className="sidebar-footer">
         <span>Modo atual</span>
-        <strong>Interface mockada</strong>
+        <strong>API local</strong>
       </div>
     </aside>
   );

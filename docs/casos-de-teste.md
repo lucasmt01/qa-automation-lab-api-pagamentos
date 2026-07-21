@@ -41,3 +41,7 @@
 | CT-039 | Criar pagamento com paymentMethod inválido | POST /payments | Validação / Negativo | Média | Automatizado |
 | CT-040 | Criar pagamento sem customerDocument | POST /payments | Validação / Negativo | Alta | Automatizado |
 | CT-041 | Atualizar status sem informar status | PATCH /payments/:id/status | Validação / Negativo | Alta | Automatizado |
+| CT-042 | Listar pagamentos por `testRunId` com sucesso | GET /payments?testRunId= | API / Listagem | Alta | Automatizado |
+| CT-043 | Listar pagamentos por `testRunId` sem registros | GET /payments?testRunId= | API / Listagem | Média | Automatizado |
+| CT-044 | Tentar listar pagamentos sem informar `testRunId` | GET /payments | Validação / Negativo | Alta | Automatizado |
+| CT-045 | Tentar listar pagamentos sem autenticação | GET /payments?testRunId= | Autenticação / Negativo | Alta | Automatizado |

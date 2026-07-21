@@ -10,7 +10,13 @@ import { PaymentForm } from './components/PaymentForm';
 import { PaymentTable } from './components/PaymentTable';
 import { Sidebar } from './components/Sidebar';
 import { SummaryCards } from './components/SummaryCards';
-import { mockPayments } from './data/mock-payments';
+import {
+  ApiError,
+  cancelPayment,
+  createPayment,
+  listPayments,
+  updatePaymentStatus
+} from './services/payments-api';
 import type {
   Payment,
   PaymentFormData,
@@ -20,25 +26,44 @@ import type {
 } from './types/payment';
 import type { FeedbackVariant } from './types/ui';
 import {
-  createHistoryItem,
-  generatePaymentId,
   getOnlyDigits,
   normalizeSearch,
   validatePaymentForm
 } from './utils/payment-helpers';
 import { methodLabels, statusLabels } from './utils/payment-labels';
 
+function getFriendlyApiErrorMessage(error: unknown) {
+  if (error instanceof ApiError) {
+    const code = error.body?.code;
+    const message = error.body?.message || error.message;
+
+    return code ? `${message} (${code})` : `Erro ${error.status}: ${message}`;
+  }
+
+  if (error instanceof TypeError) {
+    return 'Não foi possível conectar com a API. Verifique se a API está rodando e se o endereço está correto.';
+  }
+
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  return 'Erro inesperado ao comunicar com a API.';
+}
+
 function App() {
-  const [payments, setPayments] = useState<Payment[]>(mockPayments);
-  const [selectedPaymentId, setSelectedPaymentId] = useState(
-    mockPayments[0]?.id ?? ''
-  );
+  const [payments, setPayments] = useState<Payment[]>([]);
+  const [selectedPaymentId, setSelectedPaymentId] = useState('');
 
   const [feedbackMessage, setFeedbackMessage] = useState(
-    'Dashboard carregado em modo simulado.'
+    'Carregando pagamentos da API local...'
   );
   const [feedbackVariant, setFeedbackVariant] =
     useState<FeedbackVariant>('info');
+
+  const [isLoadingPayments, setIsLoadingPayments] = useState(false);
+  const [isCreatingPayment, setIsCreatingPayment] = useState(false);
+  const [isUpdatingPayment, setIsUpdatingPayment] = useState(false);
 
   const [formData, setFormData] = useState<PaymentFormData>({
     amount: '',
@@ -62,7 +87,7 @@ function App() {
         !normalizedSearch ||
         payment.id.toLowerCase().includes(normalizedSearch) ||
         payment.customerDocument.toLowerCase().includes(normalizedSearch) ||
-        payment.description.toLowerCase().includes(normalizedSearch) ||
+        (payment.description || '').toLowerCase().includes(normalizedSearch) ||
         methodLabels[payment.paymentMethod]
           .toLowerCase()
           .includes(normalizedSearch) ||
@@ -93,6 +118,10 @@ function App() {
       totalAmount
     };
   }, [payments]);
+
+  useEffect(() => {
+    void loadPaymentsFromApi();
+  }, []);
 
   useEffect(() => {
     if (filteredPayments.length === 0) {
@@ -134,6 +163,35 @@ function App() {
     scrollToPaymentDetails();
   }
 
+async function loadPaymentsFromApi() {
+  setIsLoadingPayments(true);
+
+  try {
+    const response = await listPayments();
+
+    setPayments(response.items);
+    setSelectedPaymentId(response.items[0]?.id ?? '');
+
+    if (response.total === 0) {
+      showFeedback(
+        'Nenhum pagamento encontrado para este contexto. Crie um novo pagamento para começar.',
+        'info'
+      );
+    } else {
+      showFeedback(
+        `${response.total} ${
+          response.total === 1 ? 'pagamento carregado' : 'pagamentos carregados'
+        } da API local.`,
+        'success'
+      );
+    }
+  } catch (error) {
+    showFeedback(getFriendlyApiErrorMessage(error), 'error');
+  } finally {
+    setIsLoadingPayments(false);
+  }
+}
+
   function handleInputChange(field: keyof PaymentFormData, value: string) {
     setFormData((current) => ({
       ...current,
@@ -148,7 +206,7 @@ function App() {
     }
   }
 
-  function handleCreatePayment(event: FormEvent<HTMLFormElement>) {
+  async function handleCreatePayment(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const errors = validatePaymentForm(formData);
@@ -162,73 +220,78 @@ function App() {
       return;
     }
 
-    const parsedAmount = Number(formData.amount.replace(',', '.'));
-    const now = new Date().toISOString();
+    setIsCreatingPayment(true);
 
-    const newPayment: Payment = {
-      id: generatePaymentId(),
-      amount: parsedAmount,
-      currency: 'BRL',
-      paymentMethod: formData.paymentMethod,
-      customerDocument: getOnlyDigits(formData.customerDocument),
-      description: formData.description || 'Pagamento criado pela interface web',
-      status: 'PENDING',
-      createdAt: now,
-      updatedAt: now,
-      statusHistory: [
-        createHistoryItem(null, 'PENDING', 'Pagamento criado pela interface web')
-      ]
-    };
+    try {
+      const parsedAmount = Number(formData.amount.replace(',', '.'));
 
-    setPayments((current) => [newPayment, ...current]);
-    setSelectedPaymentId(newPayment.id);
-    setSearchTerm('');
-    setStatusFilter('ALL');
-    setFormData({
-      amount: '',
-      paymentMethod: 'PIX',
-      customerDocument: '',
-      description: ''
-    });
-    setFormErrors({});
-    showFeedback(`Pagamento ${newPayment.id} criado com sucesso.`, 'success');
+      const createdPayment = await createPayment({
+        amount: parsedAmount,
+        paymentMethod: formData.paymentMethod,
+        customerDocument: getOnlyDigits(formData.customerDocument),
+        description:
+          formData.description.trim() || 'Pagamento criado pela interface web'
+      });
 
-    scrollToPaymentDetails();
+      setPayments((current) => [createdPayment, ...current]);
+      setSelectedPaymentId(createdPayment.id);
+      setSearchTerm('');
+      setStatusFilter('ALL');
+      setFormData({
+        amount: '',
+        paymentMethod: 'PIX',
+        customerDocument: '',
+        description: ''
+      });
+      setFormErrors({});
+
+      showFeedback(
+        `Pagamento ${createdPayment.id} criado com sucesso na API.`,
+        'success'
+      );
+
+      scrollToPaymentDetails();
+    } catch (error) {
+      showFeedback(getFriendlyApiErrorMessage(error), 'error');
+    } finally {
+      setIsCreatingPayment(false);
+    }
   }
 
-  function updatePaymentStatus(
+  async function handleUpdatePaymentStatus(
     paymentId: string,
     nextStatus: Exclude<PaymentStatus, 'PENDING'>,
     reason: string
   ) {
-    let updatedPaymentId = '';
+    setIsUpdatingPayment(true);
 
-    setPayments((currentPayments) =>
-      currentPayments.map((payment) => {
-        if (payment.id !== paymentId || payment.status !== 'PENDING') {
-          return payment;
-        }
+    try {
+      const updatedPayment =
+        nextStatus === 'CANCELLED'
+          ? await cancelPayment(paymentId, { reason })
+          : await updatePaymentStatus(paymentId, {
+              status: nextStatus,
+              reason
+            });
 
-        const now = new Date().toISOString();
-        updatedPaymentId = payment.id;
+      setPayments((currentPayments) =>
+        currentPayments.map((payment) =>
+          payment.id === updatedPayment.id ? updatedPayment : payment
+        )
+      );
 
-        return {
-          ...payment,
-          status: nextStatus,
-          updatedAt: now,
-          statusHistory: [
-            ...payment.statusHistory,
-            createHistoryItem(payment.status, nextStatus, reason)
-          ]
-        };
-      })
-    );
+      setSelectedPaymentId(updatedPayment.id);
 
-    if (updatedPaymentId) {
       showFeedback(
-        `Pagamento ${updatedPaymentId} atualizado para ${statusLabels[nextStatus]}.`,
+        `Pagamento ${updatedPayment.id} atualizado para ${statusLabels[updatedPayment.status]}.`,
         'success'
       );
+
+      scrollToPaymentDetails();
+    } catch (error) {
+      showFeedback(getFriendlyApiErrorMessage(error), 'error');
+    } finally {
+      setIsUpdatingPayment(false);
     }
   }
 
@@ -253,6 +316,7 @@ function App() {
           <PaymentForm
             formData={formData}
             formErrors={formErrors}
+            isSubmitting={isCreatingPayment}
             onSubmit={handleCreatePayment}
             onInputChange={handleInputChange}
           />
@@ -263,7 +327,11 @@ function App() {
                 <span className="section-label">Pagamentos recentes</span>
                 <h2>Operações</h2>
               </div>
-              <span className="chip">{filteredPayments.length} registros</span>
+              <span className="chip">
+                {isLoadingPayments
+                  ? 'Carregando...'
+                  : `${filteredPayments.length} registros`}
+              </span>
             </div>
 
             <PaymentFilters
@@ -286,7 +354,8 @@ function App() {
 
         <PaymentDetails
           selectedPayment={selectedPayment}
-          onUpdateStatus={updatePaymentStatus}
+          isActionLoading={isUpdatingPayment}
+          onUpdateStatus={handleUpdatePaymentStatus}
         />
       </main>
     </div>

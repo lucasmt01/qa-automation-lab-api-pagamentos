@@ -13,6 +13,7 @@ Estão dentro do escopo:
 - Health check da aplicação
 - Criação de pagamento
 - Consulta de pagamento por ID
+- Listagem de pagamentos por `testRunId`
 - Atualização de status
 - Cancelamento de pagamento
 - Validação de autenticação
@@ -23,12 +24,13 @@ Estão dentro do escopo:
 - Auditoria técnica no MongoDB
 - Execução de fluxo principal via Postman/Newman
 - Execução automatizada em pipeline CI
+- Integração da interface web com a API local
 
 ## Fora de escopo
 
 Não fazem parte do escopo atual:
 
-- Testes de interface web
+- Testes E2E automatizados da interface web
 - Testes de performance/carga
 - Testes de segurança avançados
 - Integração com serviços externos reais
@@ -51,12 +53,15 @@ Esses itens podem ser considerados em evoluções futuras do projeto.
 | Auditoria MongoDB | Validar persistência diretamente no banco |
 | Smoke via Newman | Validar fluxo principal usando collection Postman |
 | CI | Executar validações automaticamente no GitHub Actions |
+| Integração Front/API | Validar manualmente a comunicação da interface web com os endpoints da API |
 
 ## Ferramentas utilizadas
 
 - Node.js
 - Express
 - TypeScript
+- React
+- Vite
 - Playwright API
 - MongoDB
 - Docker Compose

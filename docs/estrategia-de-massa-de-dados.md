@@ -44,6 +44,44 @@ Fluxo geral:
 4. Chamar endpoint de expurgo
 5. Remover documentos vinculados ao `testRunId`
 
+## Uso na interface web
+
+A interface web utiliza o campo `testRunId` para carregar e criar pagamentos dentro de um contexto controlado.
+
+No uso manual da aplicação, o valor padrão utilizado é:
+
+`run_web_local`
+
+Esse valor permite que os pagamentos criados manualmente pela interface continuem disponíveis após recarregar a página, desde que o MongoDB mantenha o volume de dados.
+
+A listagem da interface utiliza o endpoint:
+
+`GET /payments?testRunId=run_web_local`
+
+A criação de pagamentos pela interface também envia o mesmo `testRunId`, mantendo os dados manuais separados das massas criadas pelos testes automatizados.
+
+## Uso futuro nos testes E2E
+
+Nos testes E2E com Playwright UI, o `testRunId` será dinâmico e específico por teste ou execução.
+
+Exemplo:
+
+`run_e2e_create_payment_1720000000000`
+
+A interface pode receber esse valor pela URL:
+
+`http://localhost:5173/?testRunId=run_e2e_create_payment_1720000000000`
+
+Dessa forma, os testes E2E poderão:
+
+1. Gerar um `testRunId` exclusivo
+2. Abrir a interface com esse contexto
+3. Criar dados pela UI
+4. Validar os fluxos na tela
+5. Expurgar apenas os pagamentos daquele `testRunId`
+
+Essa estratégia evita que testes E2E interfiram nos dados manuais da interface ou em massas criadas por testes de API.
+
 ## Uso na collection Postman/Newman
 
 Na collection Postman, o `testRunId` é definido no environment local.

@@ -9,8 +9,8 @@ export function HeroSection() {
         </h1>
 
         <p>
-          Interface web para simular operações de uma API de pagamentos e
-          preparar fluxos de testes E2E com Playwright.
+          Interface web integrada à API de pagamentos para executar fluxos reais
+          de criação, consulta, atualização e cancelamento.
         </p>
       </div>
 
@@ -18,7 +18,7 @@ export function HeroSection() {
         <span className="environment-dot" />
         <div>
           <small>Ambiente</small>
-          <strong>Modo simulado</strong>
+          <strong>API local</strong>
         </div>
       </div>
     </section>

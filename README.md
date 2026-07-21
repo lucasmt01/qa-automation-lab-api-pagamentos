@@ -15,6 +15,7 @@ Atualmente a API cobre os seguintes fluxos:
 - Health check da aplicação
 - Criação de pagamento
 - Consulta de pagamento por ID
+- Listagem de pagamentos por `testRunId`
 - Atualização de status para `APPROVED` ou `REFUSED`
 - Cancelamento de pagamento
 - Validação de autenticação via token
@@ -116,6 +117,8 @@ npm run postman:test
 - Node.js
 - Express
 - TypeScript
+- React
+- Vite
 - Playwright API
 - MongoDB
 - Docker Compose
@@ -128,9 +131,9 @@ npm run postman:test
 
 ### Evoluções planejadas
 
-- Relatórios e evidências de execução
-- Interface web simples consumindo a API
 - Testes E2E com Playwright UI
+- Integração dos testes E2E no GitHub Actions
+- Documentação final da Parte 2
 
 ## Estrutura do projeto
 
@@ -162,6 +165,7 @@ qa-automation-lab-api-pagamentos/
 │   │   ├── payments.contract.spec.ts
 │   │   ├── payments.create.spec.ts
 │   │   ├── payments.get.spec.ts
+│   │   ├── payments.list.spec.ts
 │   │   ├── payments.status.spec.ts
 │   │   ├── payments.validation.spec.ts
 │   │   └── test-data.cleanup.spec.ts
@@ -176,6 +180,8 @@ qa-automation-lab-api-pagamentos/
 │       ├── payment-assertions.ts
 │       ├── schema-validator.ts
 │       └── test-run.ts
+├── web-app/
+│   └── src/
 ├── docker-compose.yml
 ├── package.json
 ├── playwright.config.ts
@@ -188,6 +194,7 @@ qa-automation-lab-api-pagamentos/
 |---|---|---|
 | `GET` | `/health` | Verifica se a API está online |
 | `POST` | `/payments` | Cria um pagamento |
+| `GET` | `/payments?testRunId=` | Lista pagamentos por contexto de execução |
 | `GET` | `/payments/:id` | Consulta um pagamento por ID |
 | `PATCH` | `/payments/:id/status` | Atualiza o status do pagamento |
 | `POST` | `/payments/:id/cancel` | Cancela um pagamento |
@@ -284,6 +291,36 @@ npm run test:all
 ```bash
 npm run test:report
 ```
+
+## Interface web
+
+O projeto possui uma interface web em React + Vite para consumir a API local de pagamentos.
+
+A interface permite:
+
+- Listar pagamentos por `testRunId`
+- Criar pagamentos
+- Visualizar detalhes de um pagamento
+- Aprovar pagamentos pendentes
+- Recusar pagamentos pendentes
+- Cancelar pagamentos pendentes
+- Filtrar e buscar registros na tabela
+
+Por padrão, o front utiliza o contexto manual:
+
+`run_web_local`
+
+Também é possível informar um `testRunId` pela URL, o que será utilizado nos testes E2E para isolar a massa de dados:
+
+`http://localhost:5173/?testRunId=run_e2e_exemplo`
+
+Executar a interface web:
+
+`npm run web:dev`
+
+Gerar build da interface:
+
+`npm run web:build`
 
 ## Autenticação
 
@@ -421,8 +458,9 @@ Arquivo da pipeline:
 
 ## Próximas evoluções
 
-- Interface web simples consumindo a API
 - Testes E2E com Playwright UI
+- Integração do front e dos testes E2E no GitHub Actions
+- Documentação final da Parte 2
 
 ## Autor
 

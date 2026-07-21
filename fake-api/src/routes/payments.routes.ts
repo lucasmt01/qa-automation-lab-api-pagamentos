@@ -1,15 +1,18 @@
 ﻿import { Router } from 'express';
 import { authMiddleware } from '../middlewares/auth.middleware';
 import {
+  cancelPaymentController,
   createPaymentController,
   getPaymentByIdController,
-  updatePaymentStatusController,
-  cancelPaymentController
+  listPaymentsController,
+  updatePaymentStatusController
 } from '../controllers/payments.controller';
 
 const router = Router();
 
 router.post('/', authMiddleware, createPaymentController);
+
+router.get('/', authMiddleware, listPaymentsController);
 
 router.get('/:id', authMiddleware, getPaymentByIdController);
 

@@ -8,7 +8,7 @@ export type PaymentStatusHistory = {
   from: PaymentStatus | null;
   to: PaymentStatus;
   changedAt: string;
-  reason: string;
+  reason?: string;
 };
 
 export type Payment = {
@@ -17,9 +17,10 @@ export type Payment = {
   currency: 'BRL';
   paymentMethod: PaymentMethod;
   customerDocument: string;
-  description: string;
+  description?: string;
   status: PaymentStatus;
   statusHistory: PaymentStatusHistory[];
+  testRunId: string;
   createdAt: string;
   updatedAt: string;
 };
