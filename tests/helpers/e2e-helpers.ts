@@ -43,6 +43,9 @@ export function buildDashboardUrl(testRunId: string) {
 
 export async function openDashboard(page: Page, testRunId: string) {
   await page.goto(buildDashboardUrl(testRunId));
+
+  await expect(page).toHaveURL(new RegExp(`testRunId=${testRunId}`));
+
   await expect(page.getByTestId('feedback-message')).toBeVisible();
 }
 

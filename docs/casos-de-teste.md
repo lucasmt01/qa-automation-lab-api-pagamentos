@@ -52,3 +52,4 @@
 | CT-E2E-005 | Aprovar pagamento pendente pela interface | Interface Web + API | E2E / Integração | Alta | Automatizado |
 | CT-E2E-006 | Recusar pagamento pendente pela interface | Interface Web + API | E2E / Integração | Alta | Automatizado |
 | CT-E2E-007 | Cancelar pagamento pendente pela interface | Interface Web + API | E2E / Integração | Alta | Automatizado |
+| CT-E2E-008 | Criar e aprovar pagamento em fluxo completo pela interface | Interface Web + API | E2E / Fluxo crítico | Alta | Automatizado |

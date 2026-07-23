@@ -17,7 +17,7 @@ test.describe('Status de pagamentos - E2E', () => {
     await cleanupE2ePayments(request, testRunId);
   });
 
-  test('deve aprovar pagamento pendente pela interface', async ({
+  test('deve aprovar pagamento pendente pela interface @smoke', async ({
     page,
     request
   }) => {

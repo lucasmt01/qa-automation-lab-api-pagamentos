@@ -17,7 +17,7 @@ test.describe('Dashboard de pagamentos - E2E', () => {
     await cleanupE2ePayments(request, testRunId);
   });
 
-  test('deve abrir dashboard vazio para um testRunId novo', async ({ page }) => {
+  test('deve abrir dashboard vazio para um testRunId novo @smoke', async ({ page }) => {
     await test.step('Arrange - abrir dashboard com contexto isolado', async () => {
       await openDashboard(page, testRunId);
     });
@@ -35,7 +35,7 @@ test.describe('Dashboard de pagamentos - E2E', () => {
     });
   });
 
-  test('deve criar pagamento pela interface e exibir nos detalhes', async ({
+  test('deve criar pagamento pela interface e exibir nos detalhes @smoke', async ({
     page
   }) => {
     await test.step('Arrange - abrir dashboard com contexto isolado', async () => {
@@ -76,7 +76,7 @@ test.describe('Dashboard de pagamentos - E2E', () => {
     });
   });
 
-  test('deve carregar pagamento existente após atualizar a página', async ({
+  test('deve carregar pagamento existente após atualizar a página @smoke', async ({
     page,
     request
   }) => {

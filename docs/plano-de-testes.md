@@ -141,8 +141,49 @@ A execução é considerada concluída com sucesso quando:
 | Diferença entre ambiente local e CI | Variáveis de ambiente configuradas no workflow |
 | Conflito com Mongo local | Uso da porta `27018` no ambiente local |
 
+## Debug e análise de falhas
+
+O projeto utiliza recursos do Playwright para facilitar a investigação de falhas nos testes automatizados.
+
+Principais recursos:
+
+- HTML Report para visualizar testes executados, falhas, retries e screenshots
+- Trace Viewer para analisar ações, DOM snapshot, console e network
+- UI Mode para executar e depurar testes visualmente
+- Debug Mode para investigar testes com breakpoints no VS Code
+- Screenshots automáticos em caso de falha
+
+Comandos úteis:
+
+`npm run test:e2e:ui`
+
+Abre o modo visual do Playwright para execução e depuração dos testes E2E.
+
+`npm run test:e2e:debug`
+
+Executa os testes E2E em modo debug.
+
+`npm run test:e2e:trace`
+
+Executa os testes E2E gravando trace completo.
+
+`npm run test:report:port`
+
+Abre o relatório HTML na porta 9324.
+
+Fluxo recomendado para investigar falhas:
+
+1. Verificar a mensagem de erro no terminal.
+2. Abrir o HTML Report.
+3. Conferir o step que falhou.
+4. Analisar screenshot e trace.
+5. Verificar se houve erro de locator, resultado inesperado, falha de rede ou problema visual.
+6. Corrigir o teste ou a aplicação conforme a causa raiz.
+
 ## Observações
 
 O projeto utiliza uma API simulada para permitir controle total dos fluxos de teste, regras de negócio, massa de dados e persistência.
 
 Essa abordagem permite construir uma suíte mais realista e controlada para fins de estudo, prática e portfólio.
+
+Os testes E2E utilizam tags para separar execuções rápidas de smoke da suíte completa. Os testes marcados com `@smoke` validam os fluxos críticos da interface: abertura do dashboard, criação de pagamento, persistência após recarregamento e aprovação pela interface.
