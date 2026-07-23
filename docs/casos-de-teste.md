@@ -45,3 +45,10 @@
 | CT-043 | Listar pagamentos por `testRunId` sem registros | GET /payments?testRunId= | API / Listagem | Média | Automatizado |
 | CT-044 | Tentar listar pagamentos sem informar `testRunId` | GET /payments | Validação / Negativo | Alta | Automatizado |
 | CT-045 | Tentar listar pagamentos sem autenticação | GET /payments?testRunId= | Autenticação / Negativo | Alta | Automatizado |
+| CT-E2E-001 | Abrir dashboard vazio para um `testRunId` novo | Interface Web | E2E / UI | Alta | Automatizado |
+| CT-E2E-002 | Criar pagamento pela interface e exibir nos detalhes | Interface Web | E2E / UI | Alta | Automatizado |
+| CT-E2E-003 | Carregar pagamento existente após atualizar a página | Interface Web + API | E2E / Integração | Alta | Automatizado |
+| CT-E2E-004 | Filtrar pagamentos por status | Interface Web | E2E / UI | Média | Automatizado |
+| CT-E2E-005 | Aprovar pagamento pendente pela interface | Interface Web + API | E2E / Integração | Alta | Automatizado |
+| CT-E2E-006 | Recusar pagamento pendente pela interface | Interface Web + API | E2E / Integração | Alta | Automatizado |
+| CT-E2E-007 | Cancelar pagamento pendente pela interface | Interface Web + API | E2E / Integração | Alta | Automatizado |
